@@ -1,0 +1,32 @@
+{
+  "name": "snack-bar-nobara",
+  "version": "1.0.0",
+  "description": "A game in which a snack bar lady measures your reflexes",
+  "main": "index.js",
+  "bin": {
+    "snack-bar-nobara": "./index.js"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/naomichi-h/snack-bar-nobara.git"
+  },
+  "keywords": [
+    "game",
+    "reflexes",
+    "snack-bar-nobara"
+  ],
+  "author": "naomichi-h",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/naomichi-h/snack-bar-nobara/issues"
+  },
+  "homepage": "https://github.com/naomichi-h/snack-bar-nobara#readme",
+  "dependencies": {
+    "keypress": "^0.2.1",
+    "minimist": "^1.2.5",
+    "readline-sync": "^1.4.10"
+  }
+}
