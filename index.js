@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 const keypress = require('keypress')
 const fs = require('fs')
 const option = require('minimist')(process.argv.slice(2))
@@ -10,8 +12,8 @@ class Reflexes {
     this.randomMilisecondMin = 2000
     this.randomMilisecondMax = 5000
 
-    if (fs.existsSync('./data/result.json')) {
-      this.dataJson = require('./data/result.json')
+    if (fs.existsSync(__dirname + '/result.json')) {
+      this.dataJson = require(__dirname + '/result.json')
     } else {
       this.dataJson = []
     }
@@ -32,7 +34,7 @@ class Reflexes {
           textFlg++
         } else if (textFlg === 24) {
           process.stdin.pause()
-          fs.writeFile('./data/greeted.txt', '', function (err, result) {
+          fs.writeFile(__dirname + '/greeted.txt', '', function (err, result) {
             if (err) console.log('error', err)
           })
           resolve()
@@ -159,13 +161,13 @@ class Reflexes {
 
   saveResult (result) {
     this.dataJson.push(result)
-    fs.writeFile('data/result.json', JSON.stringify(this.dataJson, null, 2), function (err, result) {
+    fs.writeFile(__dirname + '/result.json', JSON.stringify(this.dataJson, null, 2), function (err, result) {
       if (err) console.log('error', err)
     })
   }
 
   async gameStart () {
-    if (!fs.existsSync('./data/greeted.txt')) {
+    if (!fs.existsSync(__dirname + '/greeted.txt')) {
       await this.displayFirstMessage()
     }
     await this.checkStart()
@@ -177,7 +179,7 @@ class Reflexes {
   }
 
   showRank () {
-    if (fs.existsSync('./data/result.json')) {
+    if (fs.existsSync(__dirname + '/result.json')) {
       console.log('いままでの記録はこんな感じよ。うふふ。')
       this.sortData(this.dataJson)
       for (let i = 0; i < 10; i++) {
@@ -192,8 +194,8 @@ class Reflexes {
 
   deleteData () {
     if (readlineSync.keyInYN('> これまでの記録を消して、再出発したい...そういうことでいいかしら？')) {
-      if (fs.existsSync('./data/result.json')) {
-        fs.unlinkSync('./data/result.json')
+      if (fs.existsSync(__dirname + '/result.json')) {
+        fs.unlinkSync(__dirname + '/result.json')
         console.log(('記録を消しておいたわ。新たな挑戦の夜明け...ってところかしら。すてきね...。'))
       } else {
         console.log('あら...？まだ記録がないみたいよ...よかったらお店に寄っていってね...歓迎するわ。')
