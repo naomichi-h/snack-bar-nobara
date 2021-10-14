@@ -4,6 +4,8 @@ const keypress = require('keypress')
 const fs = require('fs')
 const option = require('minimist')(process.argv.slice(2))
 const readlineSync = require('readline-sync')
+const resultPath = __dirname + '/result.json'
+const greetedPath = __dirname + '/greeted.txt'
 
 class Reflexes {
   constructor () {
@@ -12,8 +14,8 @@ class Reflexes {
     this.randomMilisecondMin = 2000
     this.randomMilisecondMax = 5000
 
-    if (fs.existsSync(__dirname + '/result.json')) {
-      this.dataJson = require(__dirname + '/result.json')
+    if (fs.existsSync(resultPath)) {
+      this.dataJson = require(resultPath)
     } else {
       this.dataJson = []
     }
@@ -29,12 +31,11 @@ class Reflexes {
       let textFlg = 0
 
       process.stdin.on('keypress', function (ch, key) {
-        if (key && textFlg < 24) {
-          console.log(str[textFlg])
-          textFlg++
-        } else if (textFlg === 24) {
+        if (key && str.length) {
+          console.log(str.shift())
+        } else if (key && !str.length) {
           process.stdin.pause()
-          fs.writeFile(__dirname + '/greeted.txt', '', function (err, result) {
+          fs.writeFile(greetedPath, '', function (err, result) {
             if (err) console.log('error', err)
           })
           resolve()
@@ -161,13 +162,13 @@ class Reflexes {
 
   saveResult (result) {
     this.dataJson.push(result)
-    fs.writeFile(__dirname + '/result.json', JSON.stringify(this.dataJson, null, 2), function (err, result) {
+    fs.writeFile(resultPath, JSON.stringify(this.dataJson, null, 2), function (err, result) {
       if (err) console.log('error', err)
     })
   }
 
   async gameStart () {
-    if (!fs.existsSync(__dirname + '/greeted.txt')) {
+    if (!fs.existsSync(greetedPath)) {
       await this.displayFirstMessage()
     }
     await this.checkStart()
@@ -179,14 +180,14 @@ class Reflexes {
   }
 
   showRank () {
-    if (fs.existsSync(__dirname + '/result.json')) {
+    if (fs.existsSync(resultPath)) {
       console.log('いままでの記録はこんな感じよ。うふふ。')
       this.sortData(this.dataJson)
-      for (let i = 0; i < 10; i++) {
-        if (this.dataJson[i]) {
-          console.log(`rank ${i + 1} : ${this.dataJson[i]} ms`)
+      this.dataJson.forEach((element, index) => {
+        if (this.dataJson[index] && index < 10) {
+          console.log(`rank ${index + 1} : ${element} ms`)
         }
-      }
+      })
     } else {
       console.log('あら...？まだ記録がないみたいよ...よかったらお店に寄っていってね...歓迎するわ。')
     }
@@ -194,8 +195,8 @@ class Reflexes {
 
   deleteData () {
     if (readlineSync.keyInYN('> これまでの記録を消して、再出発したい...そういうことでいいかしら？')) {
-      if (fs.existsSync(__dirname + '/result.json')) {
-        fs.unlinkSync(__dirname + '/result.json')
+      if (fs.existsSync(resultPath)) {
+        fs.unlinkSync(resultPath)
         console.log(('記録を消しておいたわ。新たな挑戦の夜明け...ってところかしら。すてきね...。'))
       } else {
         console.log('あら...？まだ記録がないみたいよ...よかったらお店に寄っていってね...歓迎するわ。')

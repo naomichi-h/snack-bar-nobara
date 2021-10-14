@@ -1,1 +1,7 @@
 node_modules/
+
+/.eslintrc.json
+
+/greeted.txt
+
+/result.json
