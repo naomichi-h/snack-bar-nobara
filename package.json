@@ -1,6 +1,6 @@
 {
   "name": "snack-bar-nobara",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "A game in which a snack bar lady measures your reflexes",
   "main": "index.js",
   "bin": {
